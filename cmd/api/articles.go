@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/des-ant/2024-article-api/internal/data"
 )
 
 // TODO: Replace this placeholder handler with a function that creates a new
@@ -22,6 +25,17 @@ func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// Otherwise, interpolate the movie ID in a placeholder response.
-	fmt.Fprintf(w, "show the details of article %d\n", id)
+	article := data.Article{
+		ID:    id,
+		Title: "Article Title",
+		Date:  time.Now(),
+		Body:  "This is the body of the article.",
+		Tags:  []string{"tag1", "tag2", "tag3"},
+	}
+
+	err = app.writeJSON(w, http.StatusOK, article, nil)
+	if err != nil {
+		app.logger.Error(err.Error())
+		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+	}
 }

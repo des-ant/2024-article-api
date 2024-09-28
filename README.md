@@ -55,6 +55,15 @@ show the details of article 123
 * [x] Set up project structure
 * [x] Create basic HTTP Server
 * [ ] Add API endpoints
-  * [ ] POST `/articles`
-  * [ ] GET `/articles/{id}`
-  * [ ] GET `/tags/{tagName}/{date}`
+  * [ ] Create routes
+    * [x] POST `/articles`
+    * [x] GET `/articles/{id}`
+    * [ ] GET `/tags/{tagName}/{date}`
+  * [ ] Implement handler logic
+    * [ ] POST `/articles`
+    * [ ] GET `/articles/{id}`
+    * [ ] GET `/tags/{tagName}/{date}`
+  * [ ] Create data models
+    * [ ] Create `Article` struct
+    * [ ] Create `TagSummary` struct
+  * [ ] Set up data store
