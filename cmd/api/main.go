@@ -56,19 +56,11 @@ func main() {
 		logger: logger,
 	}
 
-	// Declare a new servemux (router) and add a /v1/healthcheck route which
-	// dispatches requests to the healthcheckHandler method.
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
-
-	// Declare a HTTP server which listens on the port provided in the config
-	// struct, uses the servemux we created above as the handler, has some
-	// sensible timeout settings and writes any log messages to the structured
-	// logger at Error level.
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      mux,
-		IdleTimeout:  time.Minute,
+		Addr:        fmt.Sprintf(":%d", cfg.port),
+		Handler:     app.routes(),
+		IdleTimeout: time.Minute,
+		// Set timeouts to prevent slow clients from consuming resources.
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
