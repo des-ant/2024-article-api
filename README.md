@@ -29,7 +29,7 @@ time=2024-09-28T15:13:02.746+10:00 level=INFO msg="starting server" addr=:4000 e
 While the server is running, visit [localhost:4000/v1/healthcheck](localhost:4000/v1/healthcheck) in your web browser.
 
 Alternatively, use `curl` to make the request from a terminal:
-```curl
+```bash
 $ curl -i localhost:4000/v1/healthcheck
 HTTP/1.1 200 OK
 Date: Sat, 28 Sep 2024 05:25:21 GMT
@@ -39,6 +39,12 @@ Content-Type: text/plain; charset=utf-8
 status: available
 environment: development
 version: 1.0.0
+
+$ curl -X POST localhost:4000/v1/articles
+create a new article
+
+$ curl localhost:4000/v1/articles/123
+show the details of article 123
 ```
 
 
