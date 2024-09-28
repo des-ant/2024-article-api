@@ -3,9 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 // TODO: Replace this placeholder handler with a function that creates a new
@@ -19,15 +16,8 @@ func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Requ
 // TODO: Replace this placeholder handler with a function that returns the JSON
 // representation of a specific article.
 func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Request) {
-	// When httprouter is parsing a request, any interpolated URL parameters will
-	// be stored in the request context. Get URL parameters from the request
-	// context as a Param slice.
-	params := httprouter.ParamsFromContext(r.Context())
-
-	// Convert the "id" parameter to an integer to ensure it's a valid positive ID.
-	// Return 404 if the conversion fails or the ID is less than 1.
-	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
-	if err != nil || id < 1 {
+	id, err := app.readIDParam(r)
+	if err != nil {
 		http.NotFound(w, r)
 		return
 	}
