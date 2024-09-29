@@ -89,5 +89,9 @@ $ curl localhost:4000/v1/healthcheck
     * [ ] Create `TagSummary` struct
   * [ ] Set up data store
   * [ ] Implement error handling for:
-    * [x] Invalid routes and requests
+    * [x] Invalid routes
+    * [ ] Invalid requests
+      * [ ] POST `/articles`
+      * [ ] GET `/articles/{id}`
+      * [ ] GET `/tags/{tagName}/{date}`
     * [x] Panics

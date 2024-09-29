@@ -10,8 +10,22 @@ import (
 
 // TODO: Replace this placeholder handler with a function that creates a new
 // article.
+// TODO: Convert date string to time.Time.
 func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "create a new article")
+	var input struct {
+		Title string   `json:"title"`
+		Date  string   `json:"date"`
+		Body  string   `json:"body"`
+		Tags  []string `json:"tags"`
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 // showArticleHandler retrieve the interpolated "id" parameter from the current
