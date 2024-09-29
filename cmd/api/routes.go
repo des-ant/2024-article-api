@@ -21,7 +21,7 @@ func (app *application) routes() http.Handler {
 
 	app.addV1Routes(router)
 
-	return router
+	return app.recoverPanic(router)
 }
 
 // addV1Routes adds all routes for the v1 version of the API to the provided router.

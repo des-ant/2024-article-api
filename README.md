@@ -88,4 +88,6 @@ $ curl localhost:4000/v1/healthcheck
     * [ ] Create `Article` struct
     * [ ] Create `TagSummary` struct
   * [ ] Set up data store
-  * [ ] Implement error handling
+  * [ ] Implement error handling for:
+    * [x] Invalid routes and requests
+    * [x] Panics
