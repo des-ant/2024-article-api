@@ -9,10 +9,10 @@ import (
 	"github.com/des-ant/2024-article-api/internal/validator"
 )
 
-// TODO: Replace this placeholder handler with a function that creates a new
-// article.
+// TODO: Use DB to store articles and remove ID from input struct.
 func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
+		ID    int64            `json:"id"`
 		Title string           `json:"title"`
 		Date  data.ArticleDate `json:"date"`
 		Body  string           `json:"body"`
@@ -26,6 +26,7 @@ func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	article := &data.Article{
+		ID:    input.ID,
 		Title: input.Title,
 		Date:  input.Date,
 		Body:  input.Body,
@@ -39,7 +40,19 @@ func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	fmt.Fprintf(w, "%+v\n", input)
+	err = app.daos.Articles.Insert(article)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	headers := make(http.Header)
+	headers.Set("Location", fmt.Sprintf("/v1/articles/%d", article.ID))
+
+	err = app.writeJSON(w, http.StatusCreated, envelope{"article": article}, headers)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 // showArticleHandler retrieve the interpolated "id" parameter from the current

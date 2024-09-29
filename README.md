@@ -30,13 +30,26 @@ While the server is running, visit [localhost:4000/v1/healthcheck](localhost:400
 
 Alternatively, use `curl` to make the request from a terminal:
 ```bash
-$ curl -d '{
+curl -d '{
+  "id": 1,
   "title": "latest science shows that potato chips are better for you than sugar",
   "date": "2016-09-22",
   "body": "some text, potentially containing simple markup about how potato chip",
   "tags": ["health", "fitness", "science"]
 }' -H "Content-Type: application/json" localhost:4000/v1/articles
-{Title:latest science shows that potato chips are better for you than sugar Date:2016-09-22 Body:some text, potentially containing simple markup about how potato chip Tags:[health fitness science]}
+{
+	"article": {
+		"id": 1,
+		"title": "latest science shows that potato chips are better for you than sugar",
+		"date": "2016-09-22",
+		"body": "some text, potentially containing simple markup about how potato chip",
+		"tags": [
+			"health",
+			"fitness",
+			"science"
+		]
+	}
+}
 
 $ curl localhost:4000/v1/articles/123
 {
@@ -81,13 +94,15 @@ Content-Length: 102
     * [x] GET `/articles/{id}`
     * [ ] GET `/tags/{tagName}/{date}`
   * [ ] Implement handler logic
-    * [ ] POST `/articles`
+    * [x] POST `/articles`
     * [ ] GET `/articles/{id}`
     * [ ] GET `/tags/{tagName}/{date}`
   * [ ] Create data models
     * [ ] Create `Article` struct
     * [ ] Create `TagSummary` struct
   * [ ] Set up data store
+    * [x] Use in-memory store
+    * [ ] Replace in-memory store with PostgreSQL DB
   * [ ] Implement error handling for:
     * [x] Invalid routes
     * [ ] Invalid requests

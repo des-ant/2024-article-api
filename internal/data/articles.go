@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"sync"
 
 	"github.com/des-ant/2024-article-api/internal/validator"
@@ -43,16 +44,28 @@ func NewArticleDAO() *ArticleDAO {
 }
 
 // Insert adds a new article to the store.
-func (dao *ArticleDAO) Insert(id int64, article Article) {
+func (dao *ArticleDAO) Insert(article *Article) error {
 	dao.mutex.Lock()
 	defer dao.mutex.Unlock()
-	dao.articles[id] = article
+
+	if _, exists := dao.articles[article.ID]; exists {
+		return errors.New("duplicate key, article with ID already exists")
+	}
+
+	dao.articles[article.ID] = *article
+
+	return nil
 }
 
 // Get retrieves an article by ID.
-func (dao *ArticleDAO) Get(id int64) (Article, bool) {
+func (dao *ArticleDAO) Get(id int64) (*Article, error) {
 	dao.mutex.RLock()
 	defer dao.mutex.RUnlock()
+
 	article, exists := dao.articles[id]
-	return article, exists
+	if !exists {
+		return nil, errors.New("article with ID not found")
+	}
+
+	return &article, nil
 }

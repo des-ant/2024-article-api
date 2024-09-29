@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/des-ant/2024-article-api/internal/data"
 )
 
 // Declare a string containing the application version number.
@@ -30,6 +32,7 @@ type config struct {
 type application struct {
 	config config
 	logger *slog.Logger
+	daos   *data.DAOs
 }
 
 // parseFlags reads the value of the port and env command-line flags into the
@@ -54,6 +57,7 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		daos:   data.NewDAOs(),
 	}
 
 	srv := &http.Server{
