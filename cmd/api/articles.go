@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/des-ant/2024-article-api/internal/data"
+	"github.com/des-ant/2024-article-api/internal/validator"
 )
 
 // TODO: Replace this placeholder handler with a function that creates a new
 // article.
-// TODO: Use custom type for date field.
 func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title string           `json:"title"`
@@ -22,6 +22,20 @@ func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Requ
 	err := app.readJSON(w, r, &input)
 	if err != nil {
 		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	article := &data.Article{
+		Title: input.Title,
+		Date:  input.Date,
+		Body:  input.Body,
+		Tags:  input.Tags,
+	}
+
+	v := validator.New()
+
+	if data.ValidateArticle(v, article); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
 

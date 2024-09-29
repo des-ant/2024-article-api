@@ -91,7 +91,7 @@ Content-Length: 102
   * [ ] Implement error handling for:
     * [x] Invalid routes
     * [ ] Invalid requests
-      * [ ] POST `/articles`
+      * [x] POST `/articles`
       * [ ] GET `/articles/{id}`
       * [ ] GET `/tags/{tagName}/{date}`
     * [x] Panics
