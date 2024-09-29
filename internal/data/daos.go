@@ -1,5 +1,13 @@
 package data
 
+import (
+	"errors"
+)
+
+var (
+	ErrRecordNotFound = errors.New("record not found")
+)
+
 // DAOs represents a collection of data access objects.
 type DAOs struct {
 	Articles *ArticleDAO

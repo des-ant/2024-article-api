@@ -59,12 +59,16 @@ func (dao *ArticleDAO) Insert(article *Article) error {
 
 // Get retrieves an article by ID.
 func (dao *ArticleDAO) Get(id int64) (*Article, error) {
+	if id < 1 {
+		return nil, ErrRecordNotFound
+	}
+
 	dao.mutex.RLock()
 	defer dao.mutex.RUnlock()
 
 	article, exists := dao.articles[id]
 	if !exists {
-		return nil, errors.New("article with ID not found")
+		return nil, ErrRecordNotFound
 	}
 
 	return &article, nil

@@ -51,17 +51,17 @@ curl -d '{
 	}
 }
 
-$ curl localhost:4000/v1/articles/123
+$ curl localhost:4000/v1/articles/1
 {
 	"article": {
-		"id": 123,
-		"title": "Article Title",
-		"date": "2024-09-29",
-		"body": "This is the body of the article.",
+		"id": 1,
+		"title": "latest science shows that potato chips are better for you than sugar",
+		"date": "2016-09-22",
+		"body": "some text, potentially containing simple markup about how potato chip",
 		"tags": [
-			"tag1",
-			"tag2",
-			"tag3"
+			"health",
+			"fitness",
+			"science"
 		]
 	}
 }
@@ -95,10 +95,10 @@ Content-Length: 102
     * [ ] GET `/tags/{tagName}/{date}`
   * [ ] Implement handler logic
     * [x] POST `/articles`
-    * [ ] GET `/articles/{id}`
+    * [x] GET `/articles/{id}`
     * [ ] GET `/tags/{tagName}/{date}`
   * [ ] Create data models
-    * [ ] Create `Article` struct
+    * [x] Create `Article` struct
     * [ ] Create `TagSummary` struct
   * [ ] Set up data store
     * [x] Use in-memory store
@@ -107,6 +107,6 @@ Content-Length: 102
     * [x] Invalid routes
     * [ ] Invalid requests
       * [x] POST `/articles`
-      * [ ] GET `/articles/{id}`
+      * [x] GET `/articles/{id}`
       * [ ] GET `/tags/{tagName}/{date}`
     * [x] Panics

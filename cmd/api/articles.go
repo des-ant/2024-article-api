@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/des-ant/2024-article-api/internal/data"
 	"github.com/des-ant/2024-article-api/internal/validator"
@@ -65,12 +65,15 @@ func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Reques
 		app.notFoundResponse(w, r)
 	}
 
-	article := data.Article{
-		ID:    id,
-		Title: "Article Title",
-		Date:  data.ArticleDate(time.Now()),
-		Body:  "This is the body of the article.",
-		Tags:  []string{"tag1", "tag2", "tag3"},
+	article, err := app.daos.Articles.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
 	}
 
 	err = app.writeJSON(w, http.StatusOK, envelope{"article": article}, nil)
