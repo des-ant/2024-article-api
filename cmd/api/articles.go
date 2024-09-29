@@ -10,13 +10,13 @@ import (
 
 // TODO: Replace this placeholder handler with a function that creates a new
 // article.
-// TODO: Convert date string to time.Time.
+// TODO: Use custom type for date field.
 func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Title string   `json:"title"`
-		Date  string   `json:"date"`
-		Body  string   `json:"body"`
-		Tags  []string `json:"tags"`
+		Title string           `json:"title"`
+		Date  data.ArticleDate `json:"date"`
+		Body  string           `json:"body"`
+		Tags  []string         `json:"tags"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -41,7 +41,7 @@ func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Reques
 	article := data.Article{
 		ID:    id,
 		Title: "Article Title",
-		Date:  time.Now(),
+		Date:  data.ArticleDate(time.Now()),
 		Body:  "This is the body of the article.",
 		Tags:  []string{"tag1", "tag2", "tag3"},
 	}
