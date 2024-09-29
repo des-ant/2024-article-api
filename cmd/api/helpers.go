@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/des-ant/2024-article-api/internal/data"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -23,6 +25,23 @@ func (app *application) readIDParam(r *http.Request) (int64, error) {
 	}
 
 	return id, nil
+}
+
+// readTagAndDateParams retrieves the "tagName" and "date" URL parameters from the request context,
+// converts the date to a time.Time object, and returns them. Returns an error if unsuccessful.
+func (app *application) readTagAndDateParams(r *http.Request) (string, data.ArticleDate, error) {
+	params := httprouter.ParamsFromContext(r.Context())
+
+	tagName := params.ByName("tagName")
+	dateStr := params.ByName("date")
+
+	// Parse the date
+	date, err := time.Parse("20060102", dateStr)
+	if err != nil {
+		return "", data.ArticleDate{}, errors.New("invalid date format")
+	}
+
+	return tagName, data.ArticleDate(date), nil
 }
 
 // envelope is a generic type that we can use to hold the response envelope.
@@ -112,4 +131,15 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst any
 	}
 
 	return nil
+}
+
+// filter returns a new slice containing only the elements of slice that satisfy the predicate.
+func filter(slice []string, predicate func(string) bool) []string {
+	var result []string
+	for _, s := range slice {
+		if predicate(s) {
+			result = append(result, s)
+		}
+	}
+	return result
 }

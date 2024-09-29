@@ -16,6 +16,14 @@ type Article struct {
 	Tags  []string    `json:"tags"`
 }
 
+// TagSummary represents a summary of tags for a given article.
+type TagSummary struct {
+	Tag         string   `json:"tag"`
+	Count       int      `json:"count"`
+	Articles    []int64  `json:"articles"`
+	RelatedTags []string `json:"related_tags"`
+}
+
 // ValidateArticle validates the provided Article struct and adds an error message
 // to the validator instance if any of the validation rules fail.
 func ValidateArticle(v *validator.Validator, article *Article) {
@@ -72,4 +80,50 @@ func (dao *ArticleDAO) Get(id int64) (*Article, error) {
 	}
 
 	return &article, nil
+}
+
+// GetArticlesByTagAndDate retrieves articles by tag and date.
+func (dao *ArticleDAO) GetArticlesByTagAndDate(tag string, date ArticleDate) ([]Article, error) {
+	dao.mutex.RLock()
+	defer dao.mutex.RUnlock()
+
+	var result []Article
+	for _, article := range dao.articles {
+		if article.Date == date && contains(article.Tags, tag) {
+			result = append(result, article)
+		}
+	}
+
+	if len(result) == 0 {
+		return nil, errors.New("no articles found for the given tag and date")
+	}
+
+	return result, nil
+}
+
+// GetRelatedTags retrieves related tags from a list of articles.
+func (dao *ArticleDAO) GetRelatedTags(articles []Article) []string {
+	tagSet := make(map[string]struct{})
+	for _, article := range articles {
+		for _, tag := range article.Tags {
+			tagSet[tag] = struct{}{}
+		}
+	}
+
+	var relatedTags []string
+	for tag := range tagSet {
+		relatedTags = append(relatedTags, tag)
+	}
+
+	return relatedTags
+}
+
+// Helper function to check if a slice contains a string.
+func contains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }

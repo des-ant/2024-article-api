@@ -29,6 +29,7 @@ func (app *application) addV1Routes(router *httprouter.Router) {
 	app.addRoute(router, http.MethodGet, "/healthcheck", app.healthcheckHandler)
 	app.addRoute(router, http.MethodPost, "/articles", app.createArticleHandler)
 	app.addRoute(router, http.MethodGet, "/articles/:id", app.showArticleHandler)
+	app.addRoute(router, http.MethodGet, "/tags/:tagName/:date", app.getArticlesByTagAndDateHandler)
 }
 
 // addRoute is a helper method that adds a route to the router with the proper base path.

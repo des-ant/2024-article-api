@@ -30,7 +30,7 @@ While the server is running, visit [localhost:4000/v1/healthcheck](localhost:400
 
 Alternatively, use `curl` to make the request from a terminal:
 ```bash
-curl -d '{
+$ curl -d '{
   "id": 1,
   "title": "latest science shows that potato chips are better for you than sugar",
   "date": "2016-09-22",
@@ -66,6 +66,44 @@ $ curl localhost:4000/v1/articles/1
 	}
 }
 
+$ curl -d '{
+  "id": 2,
+  "title": "breakthrough in sleep science",
+  "date": "2016-09-22",
+  "body": "scientists have discovered a new way to help you fall asleep faster",
+  "tags": ["health", "lifestyle", "science"]
+}' -H "Content-Type: application/json" localhost:4000/v1/articles
+{
+	"article": {
+		"id": 2,
+		"title": "breakthrough in sleep science",
+		"date": "2016-09-22",
+		"body": "scientists have discovered a new way to help you fall asleep faster",
+		"tags": [
+			"health",
+			"lifestyle",
+			"science"
+		]
+	}
+}
+
+$ curl localhost:4000/v1/tags/health/20160922
+{
+	"tag_summary": {
+		"tag": "health",
+		"count": 2,
+		"articles": [
+			1,
+			2
+		],
+		"related_tags": [
+			"science",
+			"lifestyle",
+			"fitness"
+		]
+	}
+}
+
 $ curl -i localhost:4000/v1/healthcheck
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -89,24 +127,24 @@ Content-Length: 102
 * [x] Set up project structure
 * [x] Create basic HTTP Server
 * [ ] Add API endpoints
-  * [ ] Create routes
+  * [x] Create routes
     * [x] POST `/articles`
     * [x] GET `/articles/{id}`
-    * [ ] GET `/tags/{tagName}/{date}`
-  * [ ] Implement handler logic
+    * [x] GET `/tags/{tagName}/{date}`
+  * [x] Implement handler logic
     * [x] POST `/articles`
     * [x] GET `/articles/{id}`
-    * [ ] GET `/tags/{tagName}/{date}`
+    * [x] GET `/tags/{tagName}/{date}`
   * [ ] Create data models
     * [x] Create `Article` struct
-    * [ ] Create `TagSummary` struct
+    * [x] Create `TagSummary` struct
   * [ ] Set up data store
     * [x] Use in-memory store
     * [ ] Replace in-memory store with PostgreSQL DB
   * [ ] Implement error handling for:
     * [x] Invalid routes
-    * [ ] Invalid requests
+    * [x] Invalid requests
       * [x] POST `/articles`
       * [x] GET `/articles/{id}`
-      * [ ] GET `/tags/{tagName}/{date}`
+      * [x] GET `/tags/{tagName}/{date}`
     * [x] Panics
