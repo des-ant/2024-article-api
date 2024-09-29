@@ -22,6 +22,9 @@ func (app *application) readIDParam(r *http.Request) (int64, error) {
 	return id, nil
 }
 
+// envelope is a generic type that we can use to hold the response envelope.
+type envelope map[string]any
+
 // writeJSON writes the provided data to the http.ResponseWriter as JSON.
 func (app *application) writeJSON(w http.ResponseWriter, status int, data any, headers http.Header) error {
 	js, err := json.MarshalIndent(data, "", "\t")

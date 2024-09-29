@@ -44,7 +44,28 @@ $ curl -X POST localhost:4000/v1/articles
 create a new article
 
 $ curl localhost:4000/v1/articles/123
-show the details of article 123
+{
+	"article": {
+		"id": 123,
+		"title": "Article Title",
+		"date": "2024-09-29T11:39:12.858097+10:00",
+		"body": "This is the body of the article.",
+		"tags": [
+			"tag1",
+			"tag2",
+			"tag3"
+		]
+	}
+}
+
+$ curl localhost:4000/v1/healthcheck
+{
+	"status": "available",
+	"system_info": {
+		"environment": "development",
+		"version": "1.0.0"
+	}
+}
 ```
 
 
