@@ -30,25 +30,20 @@ While the server is running, visit [localhost:4000/v1/healthcheck](localhost:400
 
 Alternatively, use `curl` to make the request from a terminal:
 ```bash
-$ curl -i localhost:4000/v1/healthcheck
-HTTP/1.1 200 OK
-Date: Sat, 28 Sep 2024 05:25:21 GMT
-Content-Length: 58
-Content-Type: text/plain; charset=utf-8
-
-status: available
-environment: development
-version: 1.0.0
-
-$ curl -X POST localhost:4000/v1/articles
-create a new article
+$ curl -d '{
+  "title": "latest science shows that potato chips are better for you than sugar",
+  "date": "2016-09-22",
+  "body": "some text, potentially containing simple markup about how potato chip",
+  "tags": ["health", "fitness", "science"]
+}' -H "Content-Type: application/json" localhost:4000/v1/articles
+{Title:latest science shows that potato chips are better for you than sugar Date:2016-09-22 Body:some text, potentially containing simple markup about how potato chip Tags:[health fitness science]}
 
 $ curl localhost:4000/v1/articles/123
 {
 	"article": {
 		"id": 123,
 		"title": "Article Title",
-		"date": "2024-09-29T11:39:12.858097+10:00",
+		"date": "2024-09-29",
 		"body": "This is the body of the article.",
 		"tags": [
 			"tag1",
@@ -58,7 +53,12 @@ $ curl localhost:4000/v1/articles/123
 	}
 }
 
-$ curl localhost:4000/v1/healthcheck
+$ curl -i localhost:4000/v1/healthcheck
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 29 Sep 2024 06:20:28 GMT
+Content-Length: 102
+
 {
 	"status": "available",
 	"system_info": {
