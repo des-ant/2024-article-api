@@ -67,3 +67,4 @@ show the details of article 123
     * [ ] Create `Article` struct
     * [ ] Create `TagSummary` struct
   * [ ] Set up data store
+  * [ ] Implement error handling
