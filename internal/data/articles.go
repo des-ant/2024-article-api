@@ -1,6 +1,8 @@
 package data
 
 import (
+	"sync"
+
 	"github.com/des-ant/2024-article-api/internal/validator"
 )
 
@@ -25,4 +27,32 @@ func ValidateArticle(v *validator.Validator, article *Article) {
 	v.Check(len(article.Tags) >= 1, "tags", "must contain at least 1 tag")
 	v.Check(len(article.Tags) <= 10, "tags", "must not contain more than 10 tags")
 	v.Check(validator.Unique(article.Tags), "tags", "must not contain duplicate values")
+}
+
+// ArticleDAO represents the data access object for articles.
+type ArticleDAO struct {
+	articles map[int64]Article
+	mutex    sync.RWMutex
+}
+
+// NewArticleDAO creates a new instance of ArticleDAO.
+func NewArticleDAO() *ArticleDAO {
+	return &ArticleDAO{
+		articles: make(map[int64]Article),
+	}
+}
+
+// Insert adds a new article to the store.
+func (dao *ArticleDAO) Insert(id int64, article Article) {
+	dao.mutex.Lock()
+	defer dao.mutex.Unlock()
+	dao.articles[id] = article
+}
+
+// Get retrieves an article by ID.
+func (dao *ArticleDAO) Get(id int64) (Article, bool) {
+	dao.mutex.RLock()
+	defer dao.mutex.RUnlock()
+	article, exists := dao.articles[id]
+	return article, exists
 }
