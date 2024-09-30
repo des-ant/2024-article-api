@@ -14,9 +14,12 @@ help:
 # ==================================================================================== #
 
 ## run/api: run the cmd/api application
+# It checks if the port and env variables are set and passes them to the application.
 .PHONY: run/api
 run/api:
-	go run ./cmd/api
+	@PORT_FLAG=$$(if [ -n "${port}" ]; then echo "--port=${port}"; fi); \
+	ENV_FLAG=$$(if [ -n "${env}" ]; then echo "--env=${env}"; fi); \
+	go run ./cmd/api $$PORT_FLAG $$ENV_FLAG
 
 # ==================================================================================== #
 # QUALITY CONTROL
