@@ -168,7 +168,7 @@ Content-Length: 102
 <!-- Q&A -->
 ## :grey_question: Q&A
 
-- What languages and libraries did you use and why?
+- **What languages and libraries did you use and why?**
 
   + Aside from the recommendation, I used Go because it is a statically typed language that is easy to read and write. It also has a rich standard library that makes it easy to build web servers.
   + I also used the `httprouter` library because:
@@ -191,7 +191,7 @@ Content-Length: 102
     that the in-memory store can be easily replaced with any other data store
     e.g. PostgreSQL.
 
-- Why did you structure the project the way you did?
+- **Why did you structure the project the way you did?**
 
 ```plaintext
 2024-article-api
@@ -218,12 +218,12 @@ Content-Length: 102
       intended to be a library.
     + It can improve the code review process by separating dependency changes.
 
-- How did you approach testing?
+- **How did you approach testing?**
 
   + For testing, I primarily wanted to cover the end-to-end flow of the
     endpoints mentioned in the requirements and ensure the API was functioning from a user's perspective. I primarily used integration testing to test the interaction between different parts of the application, such as the HTTP server, routes, handlers, and application logic, in a realistic environment.
 
-- What additional features did you add and why?
+- **What additional features did you add and why?**
 
   + I added API versioning to the routes to ensure backward compatibility with
     future versions of the API. This is important for maintaining the API and
@@ -258,7 +258,7 @@ Content-Length: 102
     is stopped. This is important for ensuring the server behaves correctly and
     does not lose data or connections. Client with in-flight requests will be able to complete their requests before the server shuts down.
 
-- What assumptions did you make?
+- **What assumptions did you make?**
 
 For the API implementation, I made the following assumptions:
   + I assumed the ID values in `id` and `articles` should be integers and not
@@ -310,46 +310,46 @@ For the application requirements, I made the following assumptions:
  + I assumed that the application was a small-scale project and that the
    in-memory store would be sufficient for the initial implementation.
 
-- What did you think about the test and how long did it take for you to complete?
+- **What did you think about the test and how long did it take for you to complete?**
 
   + I thought the test was enjoyable, it was open-ended and allowed for
     creativity in the implementation. The requirements were clear and
     well-defined, which made it easier to understand what was expected.
   + I worked on the project over a few days, spending a few hours each day.
 
-- What would you have added if you had more time?
+- **What would you have added if you had more time?**
 
-  + If I had more time, I would have made changes to the code so that it could
-    be more suitable as a large scale application and more easily maintainable
-    by other developers. I would have:
-    + Add unit tests for all packages and functions and maximise test coverage.
-      + I would have mocked the data store and request validator to isolate
-        tests and make them more reliable and faster.
-    + Use a more robust data store like PostgreSQL instead of an in-memory store.
-      + For a large scale application, I would use two separate databases: one
-        for reading and one for writing. This would improve performance and
-        scalability.
-      + I would create indexes the `date` and `tags` fields to improve query
-        performance for the tags endpoint.
-      + I would consider using a document store like MongoDB or a search engine
-        like Elasticsearch for more complex queries and full-text search.
-    + I would handle partial updates for the article object using a PATCH
-      request, which would allow clients to update only specific fields of an
-      article.
-      + As mentioned above, I would add `CreatedDate`, `UpdatedDate` and
-        `PublishedDate` fields to the article object to provided more context.
-    + Implement caching to improve performance and reduce the load on the data
-      store.
-    + Added a rate limiter to prevent abuse and ensure the server remains
-      responsive.
-    + Created a Docker Compose file to run the application and a PostgreSQL
-      database together.
-    + I would have set up GitHub Actions for continuous integration and
-      continuous deployment.
-    + I would have read the application config from a file to make the
-      application more configurable and easier to deploy.
-    + I would have liked to deploy the application to a cloud provider like AWS
-      or GCP and set up monitoring and logging.
+If I had more time, I would have made changes to the code so that it could be
+more suitable as a large scale application and more easily maintainable by other
+developers.
+
+I would:
+  + Add unit tests for all packages and functions and maximise test coverage.
+    + I would have mocked the data store and request validator to isolate
+      tests and make them more reliable and faster.
+  + Use a more robust data store like PostgreSQL instead of an in-memory store.
+    + For a large scale application, I would use two separate databases: one
+      for reading and one for writing. This would improve performance and
+      scalability.
+    + I would create indexes the `date` and `tags` fields to improve query
+      performance for the tags endpoint.
+    + I would consider using a document store like MongoDB or a search engine
+      like Elasticsearch for more complex queries and full-text search.
+  + Handle partial updates for the article object using a PATCH
+    request, which would allow clients to update only specific fields of an
+    article.
+    + As mentioned above, I would add `CreatedDate`, `UpdatedDate` and
+      `PublishedDate` fields to the article object to provided more context.
+  + Implement caching to improve performance and reduce the load on the data
+    store.
+  + Add a rate limiter to prevent abuse and ensure the server remains responsive.
+  + Create a Docker Compose file to run the application and a PostgreSQL
+    database together.
+  + Set up GitHub Actions for continuous integration and continuous deployment.
+  + Read the application config from a file to make the application more
+    configurable and easier to deploy.
+  + Deploy the application to a cloud provider like AWS, GCP, Digital Ocean, or
+    Heroku and set up monitoring and logging.
 
 
 <!-- Roadmap -->
