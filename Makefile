@@ -18,15 +18,15 @@ help:
 run/api:
 	go run ./cmd/api
 
+# ==================================================================================== #
+# QUALITY CONTROL
+# ==================================================================================== #
+
 ## test: run all tests
 .PHONY: test
 test:
 	@echo 'Running tests...'
 	go test -v -race ./...
-
-# ==================================================================================== #
-# QUALITY CONTROL
-# ==================================================================================== #
 
 ## tidy: format all .go files, and tidy and vendor module dependencies
 .PHONY: tidy
@@ -38,6 +38,12 @@ tidy:
 	@echo 'Verifying and vendoring module dependencies...'
 	go mod verify
 	go mod vendor
+
+## lint: run golangci-lint
+.PHONY: lint
+lint:
+	@echo 'Running linter...'
+	golangci-lint run
 
 # ==================================================================================== #
 # BUILD
