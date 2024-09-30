@@ -39,7 +39,7 @@ following commands:
 
 ```bash
 docker build -t 2024-article-api .
-docker run -p 8080:8080 2024-article-api --port=8080 --env=development
+docker run -p 8080:8080 2024-article-api
 ```
 
 Otherwise, if you have Go and Make installed, you can run the application using
