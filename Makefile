@@ -3,6 +3,7 @@
 # ==================================================================================== #
 
 ## help: print this help message
+# The sed command extracts the comments from the Makefile and prints them in a nice format.
 .PHONY: help
 help:
 	@echo 'Usage:'
@@ -16,6 +17,12 @@ help:
 .PHONY: run/api
 run/api:
 	go run ./cmd/api
+
+## test: run all tests
+.PHONY: test
+test:
+	@echo 'Running tests...'
+	go test -v -race ./...
 
 # ==================================================================================== #
 # QUALITY CONTROL
