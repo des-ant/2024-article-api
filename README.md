@@ -133,7 +133,7 @@ curl -d '{
 	}
 }
 
-$ curl localhost:8080/v1/tags/health/20160922
+curl localhost:8080/v1/tags/health/20160922
 {
 	"tag_summary": {
 		"tag": "health",
@@ -165,7 +165,89 @@ Content-Length: 102
 }
 ```
 
+<!-- Q&A -->
+## :grey_question: Q&A
 
+- What languages and libraries did you use and why?
+
+  + Aside from the recommendation, I used Go because it is a statically typed language that is easy to read and write. It also has a rich standard library that makes it easy to build web servers.
+  + I also used the `httprouter` library because:
+    + It is a lightweight and fast HTTP request router that is easy to use.
+    + I wanted the API to consistenly send JSON responses wherever possible -
+      the standard library `http.ServeMux` sends plaintext (non-JSON) responses
+      `404` and `405` responses when a matching route is not found.
+    + `http.ServeMux` does not automatically handle `OPTIONS` requests, which
+      are required for CORS preflight requests.
+    + `httprouter` supports both of the above features and is stable and well-tested.
+    + However, because `httprouter` is minimalistic, I had to implement some
+      features myself, such as handling invalid routes and requests. This was
+      good for learning purposes but added complexity and prolonged development
+      time.
+  + I used the `testify` library for testing because it provides useful
+    assertion functions that make tests easier to read and write.
+  + For the data store, I had initially planned to use PostgreSQL but due to time
+    constraints, I used an in-memory store. However, I structured the code so
+    that the in-memory store can be easily replaced with any other data store
+    e.g. PostgreSQL.
+
+- Why did you structure the project the way you did?
+
+```plaintext
+2024-article-api
+├─ cmd/
+│  ├─ api/
+├─ internal/
+│  ├─ data/
+│  ├─ validator/
+├─ vendor/
+```
+
+  + The application was structured this way to separate concerns and make the
+    codebase easier to navigate and maintain.
+  + The `cmd/api` directory contains the main application code, including the
+    server setup and configuration.
+  + The `internal` directory contains the application's internal packages, such
+    as the data store and request validator. We import these packages in
+    `cmd/api`.
+  + The `vendor` directory contains the project's dependencies. It is
+    technically not necessary but I chose to include it for a few reasons:
+    + It ensures the project builds without external dependencies.
+    + It speeds up CI/CD jobs by avoiding dependency downloads.
+    + It did not add significant overhead to the project and the project is not
+      intended to be a library.
+    + It can improve the code review process by separating dependency changes.
+
+- How did you approach testing?
+
+  + For testing, I primarily wanted to cover the end-to-end flow of the
+    endpoints mentioned in the requirements and ensure the API was functioning from a user's perspective. I primarily used integration testing to test the interaction between different parts of the application, such as the HTTP server, routes, handlers, and application logic, in a realistic environment.
+
+- What additional features did you add and why?
+
+  + I added API versioning to the routes to ensure backward compatibility with
+    future versions of the API. This is important for maintaining the API and
+    ensuring that clients can continue to use the API without breaking changes.
+  + I added a healthcheck endpoint to return the status of the server and some
+    system information. This is useful for monitoring the server and diagnosing
+    issues.
+  + I added a `Makefile` to simplify common development tasks, such as building,
+    running, and testing the application. This makes it easier to work on the
+    project and ensures consistency across different environments.
+  + I handled invalid routes and requests to provide a better user experience
+    and prevent potential security vulnerabilities. This is important for
+    ensuring the API is robust and secure.
+    + For example I limited the size of the request body to prevent denial of
+      service attacks, optimise performance and prevent memory exhaustion.
+  + I used Docker to containerize the application so it could be run in any
+    environment without additional setup. This also makes it easier to deploy to
+    a cloud provider like AWS or GCP.
+  + I added middleware to handle panics during request handling. This ensures
+    that instead of just closing the connection, a `500 Internal Server Error`
+    response is sent to the client, providing context for the error.
+  + I also enveloped the JSON response by nesting data under a key like
+    `"article"`. This makes the response more self-documenting, reduces
+    client-side errors, and mitigates certain security vulnerabilities in older
+    browsers.
 
 <!-- Roadmap -->
 ## :compass: Roadmap
