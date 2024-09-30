@@ -47,3 +47,26 @@ func (ad ArticleDate) ToTime() time.Time {
 func (ad ArticleDate) String() string {
 	return time.Time(ad).Format("2006-01-02")
 }
+
+// ParseArticleDate converts a string in the format "2006-01-02" to an ArticleDate.
+func ParseArticleDate(date string) (ArticleDate, error) {
+	parsedTime, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return ArticleDate{}, ErrInvalidArticleDateFormat
+	}
+
+	return ArticleDate(parsedTime), nil
+}
+
+// ParseArticleDates converts a slice of strings in the format "2006-01-02" to a slice of ArticleDate.
+func ParseArticleDates(dates []string) ([]ArticleDate, error) {
+	var articleDates []ArticleDate
+	for _, date := range dates {
+		parsedDate, err := ParseArticleDate(date)
+		if err != nil {
+			return nil, err
+		}
+		articleDates = append(articleDates, parsedDate)
+	}
+	return articleDates, nil
+}
