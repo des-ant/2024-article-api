@@ -7,6 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/des-ant/2024-article-api/internal/data/mocks"
 )
 
 func TestHealthcheck(t *testing.T) {
@@ -245,6 +247,75 @@ func TestShowArticleHandler(t *testing.T) {
 			statusCode, _, body := ts.get(t, url)
 			assert.Equal(t, tt.expectedStatus, statusCode)
 			require.JSONEq(t, tt.expectedBody, body)
+		})
+	}
+}
+
+func TestGetArticlesByTagAndDateHandler(t *testing.T) {
+	app := newTestApplication(t)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
+
+	mockArticles := mocks.InitMockArticles()
+
+	for _, article := range mockArticles {
+		articleMap := map[string]interface{}{
+			"id":    article.ID,
+			"title": article.Title,
+			"date":  article.Date.String(),
+			"body":  article.Body,
+			"tags":  article.Tags,
+		}
+		statusCode, _, _ := ts.postJSON(t, "/v1/articles", articleMap)
+		if statusCode != http.StatusCreated {
+			t.Fatalf("expected status %d; got %d", http.StatusCreated, statusCode)
+		}
+	}
+
+	tests := []struct {
+		name           string
+		tagName        string
+		date           string
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "Valid Tag and Date",
+			tagName:        "health",
+			date:           "20160922",
+			expectedStatus: http.StatusOK,
+			expectedBody: `{
+					"tag_summary": {
+							"tag": "health",
+							"count": 2,
+							"articles": [1, 2],
+							"related_tags": ["fitness", "science", "lifestyle"]
+					}
+			}`,
+		},
+		{
+			name:           "Non-existent Tag",
+			tagName:        "nonexistent",
+			date:           "20160922",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `{"error":"the requested resource could not be found"}`,
+		},
+		{
+			name:           "Invalid Date",
+			tagName:        "health",
+			date:           "invalid-date",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `{"error":"the requested resource could not be found"}`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			url := fmt.Sprintf("/v1/tags/%s/%s", tt.tagName, tt.date)
+			statusCode, _, body := ts.get(t, url)
+			assert.Equal(t, tt.expectedStatus, statusCode)
+
+			compareJSONBodies(t, tt.expectedBody, body)
 		})
 	}
 }

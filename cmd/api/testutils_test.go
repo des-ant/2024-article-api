@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -80,9 +81,57 @@ func (ts *testServer) postJSON(t *testing.T, urlPath string, data interface{}) (
 	return rs.StatusCode, rs.Header, string(body)
 }
 
-// checkResponse checks the response status code and body against the expected values.
-func checkResponse(t *testing.T, ts *testServer, urlPath string, expectedStatusCode int, expectedBody string) {
-	getStatusCode, _, body := ts.get(t, urlPath)
-	assert.Equal(t, expectedStatusCode, getStatusCode)
-	require.JSONEq(t, expectedBody, body)
+// sortArticlesAndTags sorts the "articles" and "related_tags" slices in the tag_summary map.
+// JSON marshalling does not guarantee the order of slices, so we need to sort them to compare them in tests.
+func sortArticlesAndTags(bodyMap map[string]interface{}) {
+	// Check if the bodyMap contains a "tag_summary" key.
+	// This ensures that we only attempt to sort if the key exists and is of the correct type.
+	tagSummary, ok := bodyMap["tag_summary"].(map[string]interface{})
+	if !ok {
+		return
+	}
+
+	// Sort the "articles" slice if it exists.
+	// We use type assertion to check if "articles" is a slice of empty interfaces.
+	if articles, ok := tagSummary["articles"].([]interface{}); ok {
+		sort.Slice(articles, func(i, j int) bool {
+			// Convert the articles to float64 to compare them.
+			// JSON unmarshalling represents all numbers as float64.
+			return articles[i].(float64) < articles[j].(float64)
+		})
+	}
+
+	// Sort the "related_tags" slice if it exists.
+	// We use type assertion to check if "related_tags" is a slice of empty interfaces.
+	if relatedTags, ok := tagSummary["related_tags"].([]interface{}); ok {
+		sort.Slice(relatedTags, func(i, j int) bool {
+			// Convert the related tags to strings to compare them.
+			// JSON unmarshalling represents all strings as string.
+			return relatedTags[i].(string) < relatedTags[j].(string)
+		})
+	}
+}
+
+// compareJSONBodies compares the expected and actual JSON bodies, ignoring the order of slices.
+func compareJSONBodies(t *testing.T, expectedBody, actualBody string) {
+	var expectedBodyMap, actualBodyMap map[string]interface{}
+
+	// Unmarshal the expected JSON body into a map.
+	// This allows us to work with the JSON data in a structured way.
+	err := json.Unmarshal([]byte(expectedBody), &expectedBodyMap)
+	require.NoError(t, err)
+
+	// Unmarshal the actual JSON body into a map.
+	// This allows us to work with the JSON data in a structured way.
+	err = json.Unmarshal([]byte(actualBody), &actualBodyMap)
+	require.NoError(t, err)
+
+	// Sort the articles and related_tags arrays before comparison.
+	// This ensures that the order of elements does not affect the comparison result.
+	sortArticlesAndTags(expectedBodyMap)
+	sortArticlesAndTags(actualBodyMap)
+
+	// Compare the expected and actual JSON bodies.
+	// This checks if the two JSON bodies are equivalent after sorting.
+	assert.Equal(t, expectedBodyMap, actualBodyMap)
 }

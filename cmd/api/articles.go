@@ -93,7 +93,7 @@ func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r 
 
 	articles, err := app.daos.Articles.GetArticlesByTagAndDate(tagName, date)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		app.notFoundResponse(w, r)
 		return
 	}
 

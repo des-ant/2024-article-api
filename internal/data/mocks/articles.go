@@ -6,11 +6,8 @@ import (
 	"github.com/des-ant/2024-article-api/internal/data"
 )
 
-// mockArticles is a set of mock articles for testing purposes.
-var mockArticles = initMockArticles()
-
 // initMockArticles initializes a set of mock articles for testing purposes.
-func initMockArticles() []*data.Article {
+func InitMockArticles() []*data.Article {
 	// Duplicate values to represent separate articleDates created with different requests.
 	dateStrings := []string{
 		"2016-09-22", "2016-09-22", "2016-09-22", "2016-09-23",
