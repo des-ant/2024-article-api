@@ -219,6 +219,8 @@ Content-Length: 102
     + It did not add significant overhead to the project and the project is not
       intended to be a library.
     + It can improve the code review process by separating dependency changes.
+  + I extracted common logic into helper functions and packages to reduce code
+    duplication and make the codebase more maintainable.
 
 - **How did you approach testing?**
 
