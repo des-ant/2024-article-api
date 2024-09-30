@@ -287,8 +287,8 @@ func TestGetArticlesByTagAndDateHandler(t *testing.T) {
 			expectedBody: `{
 					"tag_summary": {
 							"tag": "health",
-							"count": 2,
-							"articles": [1, 2],
+							"count": 17,
+							"articles": [17, 19, 20, 21, 22, 23, 24, 25, 26, 27],
 							"related_tags": ["fitness", "science", "lifestyle"]
 					}
 			}`,

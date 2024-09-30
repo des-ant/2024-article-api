@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sort"
 
 	"github.com/des-ant/2024-article-api/internal/data"
 	"github.com/des-ant/2024-article-api/internal/validator"
@@ -96,6 +97,11 @@ func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r 
 		app.notFoundResponse(w, r)
 		return
 	}
+
+	// Sort articles by ID in descending order to get the latest articles first.
+	sort.Slice(articles, func(i, j int) bool {
+		return articles[i].ID > articles[j].ID
+	})
 
 	// Get the last 10 article IDs.
 	var articleIDs []int64
