@@ -180,7 +180,8 @@ Content-Length: 102
       are required for CORS preflight requests.
     + `httprouter` supports both of the above features and is stable and well-tested.
     + However, because `httprouter` is minimalistic, I had to implement some
-      features myself, such as handling invalid routes and requests. This was
+      features myself, such as handling invalid routes and requests. I also had
+      to implement additional logic for encoding and decoding JSON. This was
       good for learning purposes but added complexity and prolonged development
       time.
   + I used the `testify` library for testing because it provides useful
@@ -238,6 +239,8 @@ Content-Length: 102
     ensuring the API is robust and secure.
     + For example I limited the size of the request body to prevent denial of
       service attacks, optimise performance and prevent memory exhaustion.
+    + I also added validation and error messages for invalid requests to provide
+      feedback to the client and prevent unexpected behavior.
   + I used Docker to containerize the application so it could be run in any
     environment without additional setup. This also makes it easier to deploy to
     a cloud provider like AWS or GCP.
@@ -248,6 +251,52 @@ Content-Length: 102
     `"article"`. This makes the response more self-documenting, reduces
     client-side errors, and mitigates certain security vulnerabilities in older
     browsers.
+
+- What assumptions did you make?
+
+For the API implementation, I made the following assumptions:
+  + I assumed the ID values in `id` and `articles` should be integers and not
+    strings. The ID of the articles in the brief was given as a string due to
+    double quote marks; however, I used integers for the ID values as I intended
+    to use integers for the ID values in the data store. In the real world,
+    returning IDs as strings can be more flexible and future-proof, especially
+    when dealing with large numbers or ensuring compatibility across different
+    systems. However, for this project, using integers was more efficient and
+    aligned with how the IDs were stored. I had planned to use an
+    auto-incrementing integer ID in the data store.
+  + For the API endpoints, I assumed that we show follow RESTful conventions.
+  + POST `/articles`
+    + Assumed `date` is the date the article was published and not when it was created
+    + In practice, I would also add the `CreatedDate`, `UpdatedDate` and `PublishedDate` fields
+    + When creating a new article, you would typically set both `CreatedDate`
+      and `UpdatedDate` to the current time, while `PublishedDate` might be set
+      to a future date or left null if not immediately published.
+    + When updating an article, you would update the `UpdatedDate`.
+    + The `PublishedDate` would be set when the article is made public, which could be at creation time or later.
+  + GET `/articles/{id}`
+    + Assumed that the `id` parameter should be a unique positive integer ID.
+    + Assumed we should return a `404 Not Found` response if the `id` is invalid.
+  + GET `/tags/{tagName}/{date}`
+    + Assumed we should return a `404 Not Found` response if the `tagName` or `date` is invalid.
+  + I made the following assumptions to validate the request, so the API would
+    be more robust and secure:
+    + Assumed the valid JSON payloads did not exceed 1MB.
+    + For the article object I assumed the following:
+      + id:
+        + must be a positive integer.
+      + title:
+        + must be provided (non-empty).
+        + must not exceed 500 bytes in length.
+      + date:
+        + must be provided and valid (non-zero).
+      + body:
+        + must be provided (non-empty).
+      + tags:
+        + must be provided (non-nil).
+        + must contain at least 1 tag.
+        + must not contain more than 10 tags.
+        + must not contain duplicate values.
+
 
 <!-- Roadmap -->
 ## :compass: Roadmap
