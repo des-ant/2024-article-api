@@ -13,8 +13,8 @@ help:
 # DEVELOPMENT
 # ==================================================================================== #
 
-## run/api: run the cmd/api application
-# It checks if the port and env variables are set and passes them to the application.
+## run/api <port> <env>: run the cmd/api application
+# Example: make run/api port=8080 env=production
 .PHONY: run/api
 run/api:
 	@PORT_FLAG=$$(if [ -n "${port}" ]; then echo "--port=${port}"; fi); \
