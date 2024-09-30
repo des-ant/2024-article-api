@@ -26,7 +26,7 @@ run/api:
 .PHONY: test
 test:
 	@echo 'Running tests...'
-	go test -v -race ./...
+	go test -v -race -cover ./...
 
 ## tidy: format all .go files, and tidy and vendor module dependencies
 .PHONY: tidy
