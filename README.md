@@ -23,6 +23,20 @@ go run ./cmd/api
 time=2024-09-30T10:26:32.818+10:00 level=INFO msg="starting server" addr=:4000 env=development
 ```
 
+<!-- Running Tests -->
+### :test_tube: Running Tests
+
+To run tests, run the following command
+
+```bash
+make test
+```
+
+To see other available `make` commands, run
+
+```bash
+make help
+```
 
 <!-- Usage -->
 ## :eyes: Usage
