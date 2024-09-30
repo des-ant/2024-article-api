@@ -73,6 +73,8 @@ make help
 While the server is running, visit
 [localhost:8080/v1/healthcheck](localhost:8080/v1/healthcheck) in your web
 browser to check the status of the server.
+Alternatively, you can use `curl` in another terminal window to make requests to
+the server.
 
 Here are some example requests you can make to the server, using `curl`:
 ```bash
