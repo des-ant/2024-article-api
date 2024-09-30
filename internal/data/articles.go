@@ -3,6 +3,7 @@ package data
 import (
 	"errors"
 	"sync"
+	"time"
 
 	"github.com/des-ant/2024-article-api/internal/validator"
 )
@@ -27,8 +28,12 @@ type TagSummary struct {
 // ValidateArticle validates the provided Article struct and adds an error message
 // to the validator instance if any of the validation rules fail.
 func ValidateArticle(v *validator.Validator, article *Article) {
+	v.Check(article.ID > 0, "id", "must be a positive integer")
+
 	v.Check(article.Title != "", "title", "must be provided")
 	v.Check(len(article.Title) <= 500, "title", "must not be more than 500 bytes long")
+
+	v.Check(!time.Time(article.Date).IsZero(), "date", "must be provided and valid")
 
 	v.Check(article.Body != "", "body", "must be provided")
 

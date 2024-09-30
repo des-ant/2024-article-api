@@ -9,6 +9,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/des-ant/2024-article-api/internal/data"
 )
 
@@ -75,4 +78,11 @@ func (ts *testServer) postJSON(t *testing.T, urlPath string, data interface{}) (
 	body = bytes.TrimSpace(body)
 
 	return rs.StatusCode, rs.Header, string(body)
+}
+
+// checkResponse checks the response status code and body against the expected values.
+func checkResponse(t *testing.T, ts *testServer, urlPath string, expectedStatusCode int, expectedBody string) {
+	getStatusCode, _, body := ts.get(t, urlPath)
+	assert.Equal(t, expectedStatusCode, getStatusCode)
+	require.JSONEq(t, expectedBody, body)
 }
