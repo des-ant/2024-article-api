@@ -18,8 +18,9 @@ cd 2024-article-api
 Start the server
 
 ```bash
-$ go run ./cmd/api
-time=2024-09-28T15:13:02.746+10:00 level=INFO msg="starting server" addr=:4000 env=development
+$ make run/api
+go run ./cmd/api
+time=2024-09-30T10:26:32.818+10:00 level=INFO msg="starting server" addr=:4000 env=development
 ```
 
 
