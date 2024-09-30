@@ -12,16 +12,13 @@ import (
 )
 
 // Declare a string containing the application version number.
-// TODO: auto-generate at build time.
 const version = "1.0.0"
 
 // Define a config struct to hold all the configuration settings for our
 // application.
-// TODO: Add more settings as needed.
 // Currently includes:
 // - Network port for the server
 // - Operating environment (development, staging, production, etc.)
-// TODO: Read settings from command-line flags at startup.
 type config struct {
 	port int
 	env  string
