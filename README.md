@@ -1,27 +1,56 @@
 # 2024-article-api
 
+<!-- About the Project -->
+2024-article-api is a Go-based API server designed to manage and serve articles efficiently.
+
+
+<!-- Getting Started -->
+## 	:toolbox: Getting Started
+
+<!-- Prerequisites -->
+### :bangbang: Prerequisites
+
+#### Running the Application
+Only [Docker](https://www.docker.com/) is required to run the application
+
+#### Development
+For development, the application requires:
+* [Go (version 1.23.1)](https://go.dev/dl/)
+* [Make](https://www.gnu.org/software/make/)
+* [golangci-lint](https://golangci-lint.run/welcome/install/)
+
 <!-- Run Locally -->
 ### :running: Run Locally
 
-Clone the project
+Clone the project using the following command:
 
 ```bash
 git clone https://github.com/des-ant/2024-article-api.git
 ```
 
-Go to the project directory
+Move into the project directory:
 
 ```bash
 cd 2024-article-api
 ```
 
-Start the server
+If you have Docker installed, you can build and run the application using the
+following commands:
 
 ```bash
-make run/api
-go run ./cmd/api
-time=2024-09-30T10:26:32.818+10:00 level=INFO msg="starting server" addr=:4000 env=development
+docker build -t 2024-article-api .
+docker run -p 8080:8080 2024-article-api --port=8080 --env=development
 ```
+
+Otherwise, if you have Go and Make installed, you can run the application using
+the following commands:
+
+```bash
+make run/api port=8080 env=development
+```
+
+> **_NOTE:_**: The `port` and `env` flags are optional. The default port is `4000` and the default environment is `development`.
+
 
 <!-- Running Tests -->
 ### :test_tube: Running Tests
@@ -41,9 +70,11 @@ make help
 <!-- Usage -->
 ## :eyes: Usage
 
-While the server is running, visit [localhost:4000/v1/healthcheck](localhost:4000/v1/healthcheck) in your web browser.
+While the server is running, visit
+[localhost:8080/v1/healthcheck](localhost:8080/v1/healthcheck) in your web
+browser to check the status of the server.
 
-Alternatively, use `curl` to make the request from a terminal:
+Here are some example requests you can make to the server, using `curl`:
 ```bash
 curl -d '{
   "id": 1,
@@ -51,7 +82,7 @@ curl -d '{
   "date": "2016-09-22",
   "body": "some text, potentially containing simple markup about how potato chip",
   "tags": ["health", "fitness", "science"]
-}' -H "Content-Type: application/json" localhost:4000/v1/articles
+}' -H "Content-Type: application/json" localhost:8080/v1/articles
 {
 	"article": {
 		"id": 1,
@@ -66,7 +97,7 @@ curl -d '{
 	}
 }
 
-curl localhost:4000/v1/articles/1
+curl localhost:8080/v1/articles/1
 {
 	"article": {
 		"id": 1,
@@ -87,7 +118,7 @@ curl -d '{
   "date": "2016-09-22",
   "body": "scientists have discovered a new way to help you fall asleep faster",
   "tags": ["health", "lifestyle", "science"]
-}' -H "Content-Type: application/json" localhost:4000/v1/articles
+}' -H "Content-Type: application/json" localhost:8080/v1/articles
 {
 	"article": {
 		"id": 2,
@@ -102,24 +133,24 @@ curl -d '{
 	}
 }
 
-$ curl localhost:4000/v1/tags/health/20160922
+$ curl localhost:8080/v1/tags/health/20160922
 {
 	"tag_summary": {
 		"tag": "health",
-		"count": 2,
+		"count": 4,
 		"articles": [
-			1,
-			2
+			2,
+			1
 		],
 		"related_tags": [
 			"science",
-			"lifestyle",
-			"fitness"
+			"fitness",
+			"lifestyle"
 		]
 	}
 }
 
-curl -i localhost:4000/v1/healthcheck
+curl -i localhost:8080/v1/healthcheck
 HTTP/1.1 200 OK
 Content-Type: application/json
 Date: Sun, 29 Sep 2024 06:20:28 GMT
