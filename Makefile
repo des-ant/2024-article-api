@@ -54,3 +54,9 @@ lint:
 build/api:
 	@echo 'Building cmd/api...'
 	go build -v ./cmd/api
+
+## clean: remove build artifacts and installed packages
+.PHONY: clean
+clean:
+	rm -rf api
+	go clean -i .
