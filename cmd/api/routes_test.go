@@ -289,7 +289,7 @@ func TestGetArticlesByTagAndDateHandler(t *testing.T) {
 							"tag": "health",
 							"count": 17,
 							"articles": [17, 19, 20, 21, 22, 23, 24, 25, 26, 27],
-							"related_tags": ["fitness", "science", "lifestyle"]
+							"related_tags": ["diet", "exercise", "fitness", "hydration", "lifestyle", "meditation", "mental health", "mindfulness", "mobility", "nutrition", "science", "self-care", "sleep", "stress management", "wellness", "yoga"]
 					}
 			}`,
 		},

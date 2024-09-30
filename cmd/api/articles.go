@@ -114,6 +114,9 @@ func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r 
 
 	relatedTags := app.daos.Articles.GetRelatedTags(articles)
 
+	// Get the total number of tags, including the current tag.
+	totalTagCount := len(relatedTags)
+
 	// Remove the current tag from related tags.
 	relatedTags = filter(relatedTags, func(t string) bool {
 		return t != tagName
@@ -121,7 +124,7 @@ func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r 
 
 	tagSummary := data.TagSummary{
 		Tag:         tagName,
-		Count:       len(articles),
+		Count:       totalTagCount,
 		Articles:    articleIDs,
 		RelatedTags: relatedTags,
 	}
