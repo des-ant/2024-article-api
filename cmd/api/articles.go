@@ -62,6 +62,7 @@ func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Reques
 	id, err := app.readIDParam(r)
 	if err != nil {
 		app.notFoundResponse(w, r)
+		return
 	}
 
 	article, err := app.daos.Articles.Get(id)
@@ -87,6 +88,7 @@ func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r 
 	tagName, date, err := app.readTagAndDateParams(r)
 	if err != nil {
 		app.notFoundResponse(w, r)
+		return
 	}
 
 	articles, err := app.daos.Articles.GetArticlesByTagAndDate(tagName, date)

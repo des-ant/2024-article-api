@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -181,6 +182,68 @@ func TestCreateArticleValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			postStatusCode, _, body := ts.postJSON(t, "/v1/articles", tt.data)
 			assert.Equal(t, tt.expectedStatus, postStatusCode)
+			require.JSONEq(t, tt.expectedBody, body)
+		})
+	}
+}
+
+func TestShowArticleHandler(t *testing.T) {
+	app := newTestApplication(t)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
+
+	mockArticle := map[string]interface{}{
+		"id":    1,
+		"title": "latest science shows that potato chips are better for you than sugar",
+		"date":  "2016-09-22",
+		"body":  "some text, potentially containing simple markup about how potato chip",
+		"tags":  []string{"health", "fitness", "science"},
+	}
+
+	statusCode, _, _ := ts.postJSON(t, "/v1/articles", mockArticle)
+	if statusCode != http.StatusCreated {
+		t.Fatalf("expected status %d; got %d", http.StatusCreated, statusCode)
+	}
+
+	tests := []struct {
+		name           string
+		id             string
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "Valid ID",
+			id:             "1",
+			expectedStatus: http.StatusOK,
+			expectedBody: `{
+							"article": {
+									"id": 1,
+									"title": "latest science shows that potato chips are better for you than sugar",
+									"date": "2016-09-22",
+									"body": "some text, potentially containing simple markup about how potato chip",
+									"tags": ["health", "fitness", "science"]
+							}
+					}`,
+		},
+		{
+			name:           "Non-existent ID",
+			id:             "999",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `{"error":"the requested resource could not be found"}`,
+		},
+		{
+			name:           "Invalid ID",
+			id:             "abc",
+			expectedStatus: http.StatusNotFound,
+			expectedBody:   `{"error":"the requested resource could not be found"}`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			url := fmt.Sprintf("/v1/articles/%s", tt.id)
+			statusCode, _, body := ts.get(t, url)
+			assert.Equal(t, tt.expectedStatus, statusCode)
 			require.JSONEq(t, tt.expectedBody, body)
 		})
 	}
