@@ -2,11 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log/slog"
-	"net/http"
 	"os"
-	"time"
+	"sync"
 
 	"github.com/des-ant/2024-article-api/internal/data"
 )
@@ -30,10 +28,10 @@ type application struct {
 	config config
 	logger *slog.Logger
 	daos   *data.DAOs
+	wg     sync.WaitGroup
 }
 
-// parseFlags reads the value of the port and env command-line flags into the
-// config struct.
+// parseFlags reads the value of the port and env command-line flags into the config struct.
 func parseFlags(cfg *config) {
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
@@ -57,20 +55,10 @@ func main() {
 		daos:   data.NewDAOs(),
 	}
 
-	srv := &http.Server{
-		Addr:        fmt.Sprintf(":%d", cfg.port),
-		Handler:     app.routes(),
-		IdleTimeout: time.Minute,
-		// Set timeouts to prevent slow clients from consuming resources.
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
-	}
-
 	// Start the HTTP server.
-	logger.Info("starting server", "addr", srv.Addr, "env", cfg.env)
-
-	err := srv.ListenAndServe()
-	logger.Error(err.Error())
-	os.Exit(1)
+	err := app.serve()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 }

@@ -11,7 +11,6 @@ import (
 )
 
 // createArticleHandler creates a new article in the system.
-// TODO: Use DB to store articles and remove ID from input struct.
 func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		ID    int64            `json:"id"`
@@ -58,7 +57,6 @@ func (app *application) createArticleHandler(w http.ResponseWriter, r *http.Requ
 }
 
 // showArticleHandler retrieves an article by ID.
-// TODO: Use DB to retrieve articles.
 func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -84,7 +82,6 @@ func (app *application) showArticleHandler(w http.ResponseWriter, r *http.Reques
 }
 
 // getArticlesByTagAndDateHandler retrieves articles by tag and date.
-// TODO: Use DB to retrieve articles.
 func (app *application) getArticlesByTagAndDateHandler(w http.ResponseWriter, r *http.Request) {
 	tagName, date, err := app.readTagAndDateParams(r)
 	if err != nil {

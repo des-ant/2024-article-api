@@ -253,6 +253,10 @@ Content-Length: 102
     `"article"`. This makes the response more self-documenting, reduces
     client-side errors, and mitigates certain security vulnerabilities in older
     browsers.
+  + I implemented a graceful shutdown for the server to ensure that all
+    connections are closed and resources are released properly when the server
+    is stopped. This is important for ensuring the server behaves correctly and
+    does not lose data or connections. Client with in-flight requests will be able to complete their requests before the server shuts down.
 
 - What assumptions did you make?
 
