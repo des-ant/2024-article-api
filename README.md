@@ -18,7 +18,7 @@ cd 2024-article-api
 Start the server
 
 ```bash
-$ make run/api
+make run/api
 go run ./cmd/api
 time=2024-09-30T10:26:32.818+10:00 level=INFO msg="starting server" addr=:4000 env=development
 ```
@@ -45,7 +45,7 @@ While the server is running, visit [localhost:4000/v1/healthcheck](localhost:400
 
 Alternatively, use `curl` to make the request from a terminal:
 ```bash
-$ curl -d '{
+curl -d '{
   "id": 1,
   "title": "latest science shows that potato chips are better for you than sugar",
   "date": "2016-09-22",
@@ -66,7 +66,7 @@ $ curl -d '{
 	}
 }
 
-$ curl localhost:4000/v1/articles/1
+curl localhost:4000/v1/articles/1
 {
 	"article": {
 		"id": 1,
@@ -81,7 +81,7 @@ $ curl localhost:4000/v1/articles/1
 	}
 }
 
-$ curl -d '{
+curl -d '{
   "id": 2,
   "title": "breakthrough in sleep science",
   "date": "2016-09-22",
@@ -119,7 +119,7 @@ $ curl localhost:4000/v1/tags/health/20160922
 	}
 }
 
-$ curl -i localhost:4000/v1/healthcheck
+curl -i localhost:4000/v1/healthcheck
 HTTP/1.1 200 OK
 Content-Type: application/json
 Date: Sun, 29 Sep 2024 06:20:28 GMT
