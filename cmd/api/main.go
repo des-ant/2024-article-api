@@ -70,6 +70,16 @@ func main() {
 	// out stream.
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
+	// Create the database connection pool.
+	db, err := openDB(cfg)
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	logger.Info("database connection pool established")
+
 	// Declare an instance of the application struct, containing the config struct
 	// and the logger.
 	app := &application{
@@ -79,7 +89,7 @@ func main() {
 	}
 
 	// Start the HTTP server.
-	err := app.serve()
+	err = app.serve()
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)

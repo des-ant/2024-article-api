@@ -14,11 +14,12 @@ help:
 # ==================================================================================== #
 
 ## run/api <port> <env>: run the cmd/api application
-# Example: make run/api port=8080 env=production
+# Example: make run/api port=8080 env=production db-dsn="postgres://user:password@localhost:5432/dbname"
 .PHONY: run/api
 run/api:
 	@PORT_FLAG=$$(if [ -n "${port}" ]; then echo "--port=${port}"; fi); \
 	ENV_FLAG=$$(if [ -n "${env}" ]; then echo "--env=${env}"; fi); \
+	DB_DSN_FLAG=$$(if [ -n "${db-dsn}" ]; then echo "--db-dsn=${db-dsn}"; fi); \
 	go run ./cmd/api $$PORT_FLAG $$ENV_FLAG
 
 # ==================================================================================== #

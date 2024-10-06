@@ -20,4 +20,4 @@ RUN go build -o main ./cmd/api
 EXPOSE 8080
 
 # Command to run the executable.
-CMD ["./main", "--port=8080", "--env=development"]
+CMD ["./main", "--port=8080", "--env=development", "--db-dsn=${DB_DSN}"]

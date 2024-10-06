@@ -12,14 +12,15 @@
 
 #### Running the Application
 To run the application, you need to have the following installed:
-* [Docker](https://www.docker.com/)
-* [Docker Compose](https://docs.docker.com/compose/)
+* [Docker (v27.2.0)](https://www.docker.com/)
+* [Docker Compose (v2.29.2)](https://docs.docker.com/compose/)
 
 #### Development
 For development, the application requires:
 * [Go (version 1.23.1)](https://go.dev/dl/)
 * [Make](https://www.gnu.org/software/make/)
 * [golangci-lint](https://golangci-lint.run/welcome/install/)
+* [PostgreSQL (v17.0)](https://www.postgresql.org/)
 
 <!-- Run Locally -->
 ### :running: Run Locally
@@ -53,7 +54,7 @@ Otherwise, if you have Go and Make installed, you can run the application using
 the following commands:
 
 ```bash
-make run/api port=8080 env=development
+make run/api port=8080 env=development db-dsn="postgres://user:password@localhost:5432/dbname"
 ```
 
 > **_NOTE:_**: The `port` and `env` flags are optional. The default port is `4000` and the default environment is `development`.
