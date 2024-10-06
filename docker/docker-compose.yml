@@ -17,12 +17,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=${DB_HOST:-postgres}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_USER=${DB_USER:-article-user}
-      - DB_PASSWORD=${DB_PASSWORD:-article-password}
-      - DB_NAME=${DB_NAME:-article}
-      - DB_DSN=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
+      - DB_DSN=postgres://${DB_USER:-article-user}:${DB_PASSWORD:-article-password}@${DB_HOST:-postgres}:${DB_PORT:-5432}/${DB_NAME:-article}?sslmode=disable
     depends_on:
       - postgres
 
