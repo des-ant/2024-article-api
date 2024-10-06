@@ -2,9 +2,9 @@ services:
   postgres:
     image: "postgres:17-alpine"
     environment:
-      POSTGRES_PASSWORD: article-password
-      POSTGRES_USER: article-user
-      POSTGRES_DB: article
+      POSTGRES_USER: ${POSTGRES_USER:-article-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-article-password}
+      POSTGRES_DB: ${POSTGRES_DB:-article}
     ports:
       - "5432:5432"
     volumes:
@@ -17,11 +17,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=article-user
-      - DB_PASSWORD=article-password
-      - DB_NAME=article
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${DB_USER:-article-user}
+      - DB_PASSWORD=${DB_PASSWORD:-article-password}
+      - DB_NAME=${DB_NAME:-article}
+      - DB_DSN=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
     depends_on:
       - postgres
 

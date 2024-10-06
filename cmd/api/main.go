@@ -1,12 +1,20 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"flag"
 	"log/slog"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/des-ant/2024-article-api/internal/data"
+
+	// Import the pq driver so that it can register itself with the database/sql
+	// package. Alias this import to the blank identifier to stop the Go compiler
+	// from complaining that it isn't being used.
+	_ "github.com/lib/pq"
 )
 
 // Declare a string containing the application version number.
@@ -20,6 +28,12 @@ const version = "1.0.0"
 type config struct {
 	port int
 	env  string
+	db   struct {
+		dsn          string
+		maxOpenConns int
+		maxIdleConns int
+		maxIdleTime  time.Duration
+	}
 }
 
 // Define an application struct to hold the dependencies for our HTTP handlers,
@@ -33,9 +47,18 @@ type application struct {
 
 // parseFlags reads the value of the port and env command-line flags into the config struct.
 func parseFlags(cfg *config) {
+	// Define the flags for the HTTP server.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 	flag.Parse()
+
+	// Database	connection settings.
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgreSQL DSN")
+
+	// Connection pool settings.
+	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
+	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
+	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
 }
 
 func main() {
@@ -61,4 +84,27 @@ func main() {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
+}
+
+// openDB opens a connection to the PostgreSQL database.
+func openDB(cfg config) (*sql.DB, error) {
+	db, err := sql.Open("postgres", cfg.db.dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	db.SetMaxOpenConns(cfg.db.maxOpenConns)
+	db.SetMaxIdleConns(cfg.db.maxIdleConns)
+	db.SetConnMaxIdleTime(cfg.db.maxIdleTime)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
+	if err != nil {
+		db.Close()
+		return nil, err
+	}
+
+	return db, nil
 }
