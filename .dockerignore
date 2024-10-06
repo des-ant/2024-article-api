@@ -31,3 +31,6 @@ docker-compose.yml
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+# Ignore PostgreSQL data directory
+pgdata

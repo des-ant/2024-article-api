@@ -11,7 +11,9 @@
 ### :bangbang: Prerequisites
 
 #### Running the Application
-Only [Docker](https://www.docker.com/) is required to run the application
+To run the application, you need to have the following installed:
+* [Docker](https://www.docker.com/)
+* [Docker Compose](https://docs.docker.com/compose/)
 
 #### Development
 For development, the application requires:
@@ -34,12 +36,17 @@ Move into the project directory:
 cd 2024-article-api
 ```
 
-If you have Docker installed, you can build and run the application using the
-following commands:
+If you have Docker and Docker Compose installed, you can run the application
+using the following commands:
 
+To start the application:
 ```bash
-docker build -t 2024-article-api -f docker/Dockerfile .
-docker run -p 8080:8080 2024-article-api
+docker compose -f docker/docker-compose.yml up -d
+```
+
+To stop the application:
+```bash
+docker compose -f docker/docker-compose.yml down
 ```
 
 Otherwise, if you have Go and Make installed, you can run the application using
