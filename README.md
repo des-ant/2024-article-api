@@ -38,7 +38,7 @@ If you have Docker installed, you can build and run the application using the
 following commands:
 
 ```bash
-docker build -t 2024-article-api .
+docker build -t 2024-article-api -f docker/Dockerfile .
 docker run -p 8080:8080 2024-article-api
 ```
 
