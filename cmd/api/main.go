@@ -45,7 +45,7 @@ type application struct {
 	wg     sync.WaitGroup
 }
 
-// parseFlags reads the value of the port and env command-line flags into the config struct.
+// parseFlags parses the command-line flags and returns a config struct.
 func parseFlags(cfg *config) {
 	// Define the flags for the HTTP server.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
