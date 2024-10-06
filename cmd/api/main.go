@@ -50,7 +50,6 @@ func parseFlags(cfg *config) {
 	// Define the flags for the HTTP server.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.Parse()
 
 	// Database	connection settings.
 	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgreSQL DSN")
@@ -59,6 +58,8 @@ func parseFlags(cfg *config) {
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
+
+	flag.Parse()
 }
 
 func main() {
